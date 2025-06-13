@@ -16,7 +16,11 @@ dotenv.config();
 app.use(express.json());
 app.use(helmet());  //  helmet is a security middleware that helps protect your app from common vulnerabilities by setting various HTTP headers
 app.use(morgan("dev")); // morgan is a logging middleware that helps you log requests to your app
-app.use(cors());
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 
 app.use(async (req, res, next) => {
     try {
