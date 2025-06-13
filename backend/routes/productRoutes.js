@@ -3,13 +3,13 @@ import {
   createProduct,
   deleteProduct,
   getProduct,
-  getAllProducts,
+  getProducts,
   updateProduct,
 } from "../controllers/productController.js";
 
 const router = expres.Router();
 
-router.get("/", getAllProducts);
+router.get("/", getProducts);
 router.get("/:id", getProduct);
 router.post("/", createProduct);
 router.put("/:id", updateProduct);
