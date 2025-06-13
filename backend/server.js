@@ -5,8 +5,11 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { sql }from "./config/db.js";
 import { aj } from "./lib/arcjet.js";
+import path from "path";
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+const __dirname = path.resolve();
 
 dotenv.config();
 
@@ -42,6 +45,16 @@ app.use(async (req, res, next) => {
 import productRoutes from "./routes/productRoutes.js";
 app.use("/api/products", productRoutes);
 
+if (process.env.NODE_ENV === "production") {
+  // server our react app
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  });
+}
+
+
 async function initDB() {
     try {   // sql is a function that is used as a tagged template literal which allows us to write SQL queries safe way 
         await sql`
@@ -63,8 +76,6 @@ app.get("/test", (req, res) => {
     console.log(res.getHeaders());
     res.send("Hello World!");
 });
-
-const PORT = process.env.PORT || 3000;
 
 initDB().then(() => {
     app.listen(PORT, () => {
